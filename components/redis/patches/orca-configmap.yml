@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orca
+data:
+  redis.yml: |
+    redis:
+      connection: redis://redis.spinnaker:6379
+
+    # TODO: add queue here?

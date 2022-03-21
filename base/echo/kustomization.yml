@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./echo-scheduler
+- ./echo-worker
+configMapGenerator:
+- name: echo
+  # files:
+  # - ./echo-local.yml
+  options:
+    labels:
+      app.kubernetes.io/name: echo

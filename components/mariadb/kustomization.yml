@@ -1,0 +1,120 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+- base
+
+patches:
+# Mount Spring config file per service in a subdirectories so it can be loaded
+# by `spring.config.import`.
+# Paths must match Spring naming conventions.
+# For example: {application}(-{profile}).yml
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/clouddriver.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: CLOUDDRIVER_MARIADB
+        value: clouddriver
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: clouddriver
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/echo.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: ECHO_MARIADB
+        value: echo
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: echo*
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/fiat.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: FIAT_MARIADB
+        value: fiat
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: fiat
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/front50.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: FRONT50_MARIADB
+        value: front50
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: front50
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/keel.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: KEEL_MARIADB
+        value: keel
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: keel
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: mariadb.yml
+          path: mariadb/orca.yml
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: ORCA_MARIADB
+        value: orca
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: orca
+
+patchesStrategicMerge:
+# Add repository specific configuration file to service configmap
+- patches/clouddriver-configmap.yml
+- patches/echo-configmap.yml
+- patches/fiat-configmap.yml
+- patches/front50-configmap.yml
+- patches/keel-configmap.yml
+- patches/orca-configmap.yml

@@ -1,0 +1,64 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+namespace: spinnaker
+resources:
+- base
+
+patches:
+# Mount Spring config file per service in a subdirectories so it can be loaded
+# by `spring.config.import`.
+# Paths must match Spring naming conventions.
+# For example: {application}(-{profile}).yml
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: redis.yml
+          path: redis/gate.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: gate
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: redis.yml
+          path: redis/igor.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: igor
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: redis.yml
+          path: redis/orca.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: orca
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: redis.yml
+          path: redis/rosco.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: rosco
+
+patchesStrategicMerge:
+- patches/gate-configmap.yml
+- patches/igor-configmap.yml
+- patches/orca-configmap.yml
+- patches/rosco-configmap.yml
