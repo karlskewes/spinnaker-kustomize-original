@@ -1,0 +1,234 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+- ../../base/
+
+# Set Replica count for Spinnaker deployments.
+# Set CPU & Memory requests/limits
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: clouddriver-caching
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: clouddriver-ro
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: clouddriver-ro-deck
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: clouddriver-rw
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: deck
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: echo-scheduler
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: echo-worker
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: fiat
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: front50
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: gate
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: igor
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: kayenta
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: keel
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: orca
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        limits:
+          cpu: 1
+          memory: 1Gi
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: rosco
