@@ -1,18 +1,15 @@
 # TODO
 
 1. no crash on startup
-1. gate and deck external url's overlay. deck DECK_HOST & API_HOST
+1. <service>-local.yml support overlay.
+1. deck, echo, gate, keel external url's overlay. deck DECK_HOST & API_HOST
 1. mariadb password options
 1. resource limits, replicas, jvm Xmx|Xms
-1. gate commented out auth per repo gate.yml
 1. clouddriver kubernetes provider config
 1. clouddriver aws provider config
 1. armory observability plugin
-1. external services overlays
-   - postgres
 1. deck `securityContext`
 1. use what useful from old docs
-1. see if can simplify clouddriver and echo variants
 
 ## Old docs
 
