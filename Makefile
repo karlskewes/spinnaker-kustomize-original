@@ -19,6 +19,11 @@ build: ## Build Kubernetes configuration via kustomize, optionally: 'OUTPUT=exam
 apply: ## Apply Kubernetes configuration via kustomize
 	kubectl apply -k .
 
+.PHONY: expose
+expose: ## Port Forward Deck UI and Gate API
+	kubectl port-forward -n spinnaker service/deck 9000 &
+	kubectl port-forward -n spinnaker service/gate 8084 &
+
 .PHONY: delete
 delete: ## Delete KinD cluster
 	kind delete cluster --name spinnaker
