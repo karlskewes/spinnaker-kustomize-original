@@ -6,23 +6,8 @@
 spring.config.import: file:/opt/spinnaker/config/*/
 
 services:
-  # Even though clouddriver is deployed in HA mode, other services may not know
-  # this and simply look for service.clouddriver. To account for this use case,
-  # we'll point the generic 'clouddriver' at clouddriver-rw.
   clouddriver:
-    baseUrl: http://clouddriver-rw.spinnaker:7002
-    enabled: true
-  clouddriverCaching:
-    baseUrl: http://clouddriver-caching.spinnaker:7002
-    enabled: true
-  clouddriverRo:
-    baseUrl: http://clouddriver-ro.spinnaker:7002
-    enabled: true
-  clouddriverRoDeck:
-    baseUrl: http://clouddriver-ro-deck.spinnaker:7002
-    enabled: true
-  clouddriverRw:
-    baseUrl: http://clouddriver-rw.spinnaker:7002
+    baseUrl: http://clouddriver.spinnaker:7002
     enabled: true
   # Even though echo is deployed in HA mode, other services may not know
   # this and simply look for service.echo. To account for this use case,
