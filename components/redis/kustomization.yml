@@ -26,6 +26,18 @@ patches:
       path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
       value:
         - key: redis.yml
+          path: redis/kayenta.yml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: kayenta
+
+- patch: |-
+    - op: add
+      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      value:
+        - key: redis.yml
           path: redis/igor.yml
   target:
     group: apps
@@ -60,5 +72,6 @@ patches:
 patchesStrategicMerge:
 - patches/gate-configmap.yml
 - patches/igor-configmap.yml
+- patches/kayenta-configmap.yml
 - patches/orca-configmap.yml
 - patches/rosco-configmap.yml
