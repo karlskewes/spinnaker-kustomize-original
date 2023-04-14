@@ -69,16 +69,15 @@ configuration options.
 
 ## Configuration
 
-Spinnaker reads custom configuration from: `/opt/spinnaker/config/`.
+During application startup default configuration is loaded from
+`/opt/<service>/config/<service>.yml`
 
-See: `./overlays/config/files/clouddriver-local.yml`.
+Custom configuration is loaded from: `/opt/spinnaker/config/`.
+
+You can add your config to: `./overlays/config/files/clouddriver-local.yml`.
 
 This file is added to the `clouddriver` ConfigMap and mounted into the
 container at `/opt/spinnaker/config/clouddriver-local.yml`.
-
-You can find the default configuration file for each service in the services
-git repository. Check out the branch related to the version you are running.
-For release 1.29.0 check out branch `release-1.29.x`.
 
 The Java services leverage Spring Boot framework so some configuration is
 defined via Spring Boot [common application properties](https://docs.spring.io/spring-boot/docs/2.4.13/reference/html/appendix-application-properties.html#common-application-properties).
@@ -89,14 +88,16 @@ Note both of the above Spring Boot links are subject to change as Spinnaker
 upgrades Spring Boot versions. See: [Spinnaker Dependency
 Versions](https://github.com/spinnaker/kork/blob/master/spinnaker-dependencies/spinnaker-dependencies.gradle)
 
-Secrets can be supplied in the following ways:
+## Secrets
 
-1. Environment variables, mounted via Kubernetes Secret
-1. Files, mounted via Kubernetes Secret
-1. [Secret Engines](https://spinnaker.io/docs/reference/halyard/secrets/#non-halyard-configuration)
-   such as S3, GCS and potentially others.
+This Kustomize installer is unopinonated about secrets, see:
+[Spinnaker Secret Engines](https://spinnaker.io/docs/reference/halyard/secrets/#non-halyard-configuration).
 
-### Developing Kustomize Components
+## Working with Kustomize
+
+See the [official Kustomize documentation](https://kubectl.docs.kubernetes.io/references/kustomize/).
+
+### Kustomize Components
 
 The Java services leverage [Spring Application Properties - Wildcard Locations](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.wildcard-locations).
 This means that custom `components` or `overlays` can also mount files at
@@ -116,8 +117,11 @@ For example, adding MariaDB support to Clouddriver:
 The quick start MariaDB and Redis components spawn a ConfigMap per component.
 This convention enables the components to be standalone in this repository.
 
-Production grade Spinnaker installations tend to use cloud services or more
-sophisticated database services.
+Something similar could be done when multiple Spinnaker installations are
+being managed with Kustomize. Create a component/overlay called `dev` and
+another for `prod` and put environment specific files there. Mount these at
+`/opt/spinnaker/config/<dev|prod>/clouddriver.yml`. Note Spring's merge
+behavior linked further up.
 
 Separating configuration across many files and ConfigMap's can make development
 and troubleshooting difficult so try to put configuration directly into a
