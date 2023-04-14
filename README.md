@@ -1,16 +1,23 @@
 # Spinnaker Kustomize
 
-Kustomize based installation method for Spinnaker as an alternative to
-[https://github.com/spinnaker/halyard](halyard).
-This repository was inspired by https://github.com/spinnaker/kustomization-base
-and differs in the following ways:
+Kustomize based installation for Spinnaker.
+
+Repository goals:
 
 1. Optimize for deployment of a basic Spinnaker installation with one command.
 1. No Halyard, kleat or other tools for configuration. Use the services default
    configuration (eg: `clouddriver.yml`) and leverage Spring Profile's for
    customization (eg: `clouddriver-local.yml`).
+1. Minimize duplication and maintainence. Only minimal configuration and
+   patterns are defined in this repository. See
+   [spinnaker.io](https://spinnaker.io) Docs and service source code for all
+   available options.
 
-### Prerequisites
+Please fork this repository and develop any customizations locally.
+
+Please contribute documentation updates to https://github.com/spinnaker/spinnaker.io
+
+## Prerequisites
 
 Before you start, you will need:
 
@@ -49,25 +56,22 @@ make apply
 # kubectl apply -f ./spinnaker.yaml
 ```
 
-## Production ready Spinnaker
+## Customizing Spinnaker
 
 Production workloads require higher reliability and scale than the default
-configuration will support.
+configuration will support. See [spinnaker.io](https://spinnaker.io) for
+configuration options.
 
-For each of the following areas choose an alternative implementation or supply
-your own settings as required.
+1. Fork this repository
+1. (Optional) modify `./kustomization.yml`
+1. (Optional) add configuration to `./overlays/config/files/`
+1. (Optional) add components and overlays
 
-### Configuration
+## Configuration
 
-For `Deck`, custom configuration is mounted at
-`/opt/spinnaker/config/settings-local.js`.
-For Java services, custom configuration files are mounted in the
-`/opt/spinnaker/config/` directory.
+Spinnaker reads custom configuration from: `/opt/spinnaker/config/`.
 
-Custom configuration for services can be appended to their respective
-`<service>-local.yml` file.
-
-For example, see `./overlays/config/files/clouddriver-local.yml`.
+See: `./overlays/config/files/clouddriver-local.yml`.
 
 This file is added to the `clouddriver` ConfigMap and mounted into the
 container at `/opt/spinnaker/config/clouddriver-local.yml`.
@@ -75,11 +79,6 @@ container at `/opt/spinnaker/config/clouddriver-local.yml`.
 You can find the default configuration file for each service in the services
 git repository. Check out the branch related to the version you are running.
 For release 1.29.0 check out branch `release-1.29.x`.
-
-For Deck, see: https://github.com/spinnaker/deck/blob/master/halconfig/settings.js
-
-For Java services, look in the `<service>-web/config` directory. For example:
-https://github.com/spinnaker/clouddriver/blob/master/clouddriver-web/config/clouddriver.yml
 
 The Java services leverage Spring Boot framework so some configuration is
 defined via Spring Boot [common application properties](https://docs.spring.io/spring-boot/docs/2.4.13/reference/html/appendix-application-properties.html#common-application-properties).
@@ -97,13 +96,13 @@ Secrets can be supplied in the following ways:
 1. [Secret Engines](https://spinnaker.io/docs/reference/halyard/secrets/#non-halyard-configuration)
    such as S3, GCS and potentially others.
 
-#### Developing Kustomize Components
+### Developing Kustomize Components
 
 The Java services leverage [Spring Application Properties - Wildcard Locations](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.wildcard-locations).
 This means that custom `components` or `overlays` can also mount files at
-`/opt/spinnaker/config/<overlay_name>/<application>.yml`.
+`/opt/spinnaker/config/<example>/<service>.yml`.
 
-Where `<application>.yml` can be `{application}.yml` or `{application-profile}.yml`.
+Where `<service>.yml` can be `{application}.yml` or `{application}-{profile}.yml`.
 
 For example, adding MariaDB support to Clouddriver:
 
@@ -126,42 +125,26 @@ single file such as `clouddriver-local.yml`.
 
 If this is insufficient then consider adapting the MariaDB component pattern
 and sharing a ConfigMap via [configMapGenerator](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/configmapgenerator/)
-`create` and `delete` options.
+`create` and `merge` options.
 
-#### Differences to Halyard
+### Kustomize limitations
 
-The Halyard convention for Spinnaker config is to use the `local` Spring
-Profile for any custom configuration.
-
-This doesn't work with Kustomize because it's not possible to append
-configuration to a Kubernetes `ConfigMap` item, for example:
-`data.clouddriver-local.yml`. Helm can do this but has other limitations.
-
-Kustomize also does not support appending to strings either so we can't add
-additional custom Spring Profiles to each container's `SPRING_PROFILES_ACTIVE`
-environment variable and then mount files at
-`/opt/spinnaker/config/clouddriver-my_overlay.yml`.
-
-### State management
-
-Spinnaker supports a variety of backing data stores such as Redis and SQL.
-
-The default `MariaDB` and `Redis` implementations will require changes to
-support higher load and greater reliability.
-
-Edit `./kustomize.yml` and comment out or delete:
+Additional files can be added (merged) into a `ConfigMap`. However, it is not
+possible to append lines to a Kubernetes `ConfigMap` item, for example:
 
 ```
-- ./overlays/mariadb  # comment out or delete this line
-- ./overlays/redis    # comment out or delete this line
+  data:
+    clouddriver-local.yml: |
+      # Some existing configuration
+
+      # << Kustomize can't merge or append lines to clouddriver-local.yml
 ```
 
-Add your own overlay or edit an existing `./overlays/`:
+Many Spinnaker installations use custom Spring Profile's to load additional
+configuration.
 
-```
-- ./overlays/aws-aurora-mysql
-- ./overlays/aws-elasticache-redis
-- ./overlays/postgres
-- ./overlays/redis-external
-- /path/to/your/overlay
-```
+Unfortunately Kustomize `ValueAddTransformer` has limited functionality and
+it is not possible to append strings. For example, appending custom Spring
+Profiles to each container's `SPRING_PROFILES_ACTIVE` environment variable.
+
+It is possible to replace strings so that could be suitable for some use cases.
