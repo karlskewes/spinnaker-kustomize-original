@@ -12,10 +12,9 @@ spec:
           value: 0.0.0.0
         - name: DECK_PORT
           value: "9000"
-        # FIXME
-        # envFrom:
-          # - configMapRef:
-              # name: deck-env
+        envFrom:
+        - configMapRef:
+            name: deck-env
         image: us-docker.pkg.dev/spinnaker-community/docker/deck:latest
         name: deck
         ports:
@@ -48,4 +47,3 @@ spec:
           sources:
           - configMap:
               name: deck
-              items: []

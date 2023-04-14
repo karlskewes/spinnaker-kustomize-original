@@ -7,5 +7,3 @@ commonLabels:
   app.kubernetes.io/name: igor
 configMapGenerator:
 - name: igor
-  # files:
-  # - ./igor-local.yml

@@ -30,10 +30,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items/-
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        key: mariadb.yml
-        path: mariadb/echo.yml
+        configMap:
+          items:
+          - key: echo.yml
+            path: mariadb/echo.yml
+          name: echo-mariadb
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -47,10 +50,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items/-
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        key: mariadb.yml
-        path: mariadb/fiat.yml
+        configMap:
+          items:
+          - key: fiat.yml
+            path: mariadb/fiat.yml
+          name: fiat-mariadb
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -64,10 +70,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items/-
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        key: mariadb.yml
-        path: mariadb/front50.yml
+        configMap:
+          items:
+          - key: front50.yml
+            path: mariadb/front50.yml
+          name: front50-mariadb
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -81,10 +90,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items/-
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        key: mariadb.yml
-        path: mariadb/keel.yml
+        configMap:
+          items:
+          - key: keel.yml
+            path: mariadb/keel.yml
+          name: keel-mariadb
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -98,10 +110,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items/-
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        key: mariadb.yml
-        path: mariadb/orca.yml
+        configMap:
+          items:
+          - key: orca.yml
+            path: mariadb/orca.yml
+          name: orca-mariadb
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -115,15 +130,26 @@ patches:
 
 configMapGenerator:
 - behavior: create
-  name: clouddriver-overlays
+  name: clouddriver-mariadb
   files:
   - files/clouddriver.yml
-
-patchesStrategicMerge:
-# Add repository specific configuration file to service configmap
-# - patches/clouddriver-configmap.yml
-- patches/echo-configmap.yml
-- patches/fiat-configmap.yml
-- patches/front50-configmap.yml
-- patches/keel-configmap.yml
-- patches/orca-configmap.yml
+- behavior: create
+  name: echo-mariadb
+  files:
+  - files/echo.yml
+- behavior: create
+  name: fiat-mariadb
+  files:
+  - files/fiat.yml
+- behavior: create
+  name: front50-mariadb
+  files:
+  - files/front50.yml
+- behavior: create
+  name: keel-mariadb
+  files:
+  - files/keel.yml
+- behavior: create
+  name: orca-mariadb
+  files:
+  - files/orca.yml

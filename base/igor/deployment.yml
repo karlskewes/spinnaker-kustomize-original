@@ -44,9 +44,5 @@ spec:
           sources:
           - configMap:
               name: spinnaker
-              items:
-              - key: spinnaker.yml
-                path: spinnaker.yml
           - configMap:
               name: igor
-              items: []

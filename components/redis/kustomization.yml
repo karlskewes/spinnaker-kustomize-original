@@ -11,10 +11,13 @@ patches:
 # For example: {application}(-{profile}).yml
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        - key: redis.yml
-          path: redis/gate.yml
+        configMap:
+          items:
+          - key: gate.yml
+            path: redis/gate.yml
+          name: gate-redis
   target:
     group: apps
     version: v1
@@ -23,10 +26,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        - key: redis.yml
-          path: redis/kayenta.yml
+        configMap:
+          items:
+          - key: kayenta.yml
+            path: redis/kayenta.yml
+          name: kayenta-redis
   target:
     group: apps
     version: v1
@@ -35,10 +41,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        - key: redis.yml
-          path: redis/igor.yml
+        configMap:
+          items:
+          - key: igor.yml
+            path: redis/igor.yml
+          name: igor-redis
   target:
     group: apps
     version: v1
@@ -47,10 +56,13 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        - key: redis.yml
-          path: redis/orca.yml
+        configMap:
+          items:
+          - key: orca.yml
+            path: redis/orca.yml
+          name: orca-redis
   target:
     group: apps
     version: v1
@@ -59,19 +71,37 @@ patches:
 
 - patch: |-
     - op: add
-      path: /spec/template/spec/volumes/0/projected/sources/1/configMap/items
+      path: /spec/template/spec/volumes/0/projected/sources/-
       value:
-        - key: redis.yml
-          path: redis/rosco.yml
+        configMap:
+          items:
+          - key: rosco.yml
+            path: redis/rosco.yml
+          name: rosco-redis
   target:
     group: apps
     version: v1
     kind: Deployment
     name: rosco
 
-patchesStrategicMerge:
-- patches/gate-configmap.yml
-- patches/igor-configmap.yml
-- patches/kayenta-configmap.yml
-- patches/orca-configmap.yml
-- patches/rosco-configmap.yml
+configMapGenerator:
+- behavior: create
+  name: gate-redis
+  files:
+  - files/gate.yml
+- behavior: create
+  name: igor-redis
+  files:
+  - files/igor.yml
+- behavior: create
+  name: kayenta-redis
+  files:
+  - files/kayenta.yml
+- behavior: create
+  name: orca-redis
+  files:
+  - files/orca.yml
+- behavior: create
+  name: rosco-redis
+  files:
+  - files/rosco.yml

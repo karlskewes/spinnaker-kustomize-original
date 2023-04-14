@@ -7,3 +7,4 @@ commonLabels:
   app.kubernetes.io/name: deck
 configMapGenerator:
 - name: deck
+- name: deck-env

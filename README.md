@@ -64,6 +64,14 @@ For `Deck`, custom configuration is mounted at
 For Java services, custom configuration files are mounted in the
 `/opt/spinnaker/config/` directory.
 
+Custom configuration for services can be appended to their respective
+`<service>-local.yml` file.
+
+For example, see `./overlays/config/files/clouddriver-local.yml`.
+
+This file is added to the `clouddriver` ConfigMap and mounted into the
+container at `/opt/spinnaker/config/clouddriver-local.yml`.
+
 You can find the default configuration file for each service in the services
 git repository. Check out the branch related to the version you are running.
 For release 1.29.0 check out branch `release-1.29.x`.
@@ -89,17 +97,7 @@ Secrets can be supplied in the following ways:
 1. [Secret Engines](https://spinnaker.io/docs/reference/halyard/secrets/#non-halyard-configuration)
    such as S3, GCS and potentially others.
 
-#### Custom Configuration
-
-Custom configuration for services can be appended to their respective
-`<service>-local.yml` file.
-
-For example, see `./overlays/config/files/clouddriver-local.yml`.
-
-This file is added to the `clouddriver` ConfigMap and mounted into the
-container at `/opt/spinnaker/config/clouddriver-local.yml`.
-
-#### Custom Component Configuration
+#### Developing Kustomize Components
 
 The Java services leverage [Spring Application Properties - Wildcard Locations](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.wildcard-locations).
 This means that custom `components` or `overlays` can also mount files at
@@ -123,9 +121,8 @@ Production grade Spinnaker installations tend to use cloud services or more
 sophisticated database services.
 
 Separating configuration across many files and ConfigMap's can make development
-and troubleshooting difficult so it is recommend configuration is put directly
-into a single file such as `clouddriver-local.yml` per the above section
-[custom-configuration].
+and troubleshooting difficult so try to put configuration directly into a
+single file such as `clouddriver-local.yml`.
 
 If this is insufficient then consider adapting the MariaDB component pattern
 and sharing a ConfigMap via [configMapGenerator](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/configmapgenerator/)

@@ -3,11 +3,15 @@ kind: Component
 
 configMapGenerator:
 - behavior: merge
+  name: spinnaker
+  files:
+  - files/spinnaker-local.yml
+- behavior: merge
   name: clouddriver
   files:
   - files/clouddriver-local.yml
 - behavior: merge
-  name: deck
+  name: deck-env
   envs:
   - files/deck.env
 - behavior: merge
