@@ -89,20 +89,47 @@ Secrets can be supplied in the following ways:
 1. [Secret Engines](https://spinnaker.io/docs/reference/halyard/secrets/#non-halyard-configuration)
    such as S3, GCS and potentially others.
 
-#### Custom Overlay Configuration
+#### Custom Configuration
+
+Custom configuration for services can be appended to their respective
+`<service>-local.yml` file.
+
+For example, see `./overlays/config/files/clouddriver-local.yml`.
+
+This file is added to the `clouddriver` ConfigMap and mounted into the
+container at `/opt/spinnaker/config/clouddriver-local.yml`.
+
+#### Custom Component Configuration
 
 The Java services leverage [Spring Application Properties - Wildcard Locations](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.wildcard-locations).
-This means that custom overlays need to mount files at `/opt/spinnaker/config/<overlay_name>/<application>.yml`.
+This means that custom `components` or `overlays` can also mount files at
+`/opt/spinnaker/config/<overlay_name>/<application>.yml`.
+
 Where `<application>.yml` can be `{application}.yml` or `{application-profile}.yml`.
 
-The convention adopted by this repository is:
+For example, adding MariaDB support to Clouddriver:
 
-1. Add an item to the service's `ConfigMap` using a Patch file.
-   For example The MariaDB overlay has a Clouddriver ConfigMap that contains
-   a file called `mariadb.yml`.
-1. Mount the ConfigMap item in a subdirectory in the container.
-   For example the MariaDB overlay mounts `mariadb.yml` at
-   `.../config/mariadb/clouddriver.yml`.
+1. In the `./components/mariadb/` directory
+1. `files/clouddriver.yml` contains Clouddriver SQL configuration
+1. `kustomization.yml` generates a ConfigMap `clouddriver-mariadb` with the
+   above file
+1. The ConfigMap is added to the Clouddriver Deployment Projected Volume
+   sources, mounting the file at: `/opt/spinnaker/config/mariadb/clouddriver.yml`
+
+The quick start MariaDB and Redis components spawn a ConfigMap per component.
+This convention enables the components to be standalone in this repository.
+
+Production grade Spinnaker installations tend to use cloud services or more
+sophisticated database services.
+
+Separating configuration across many files and ConfigMap's can make development
+and troubleshooting difficult so it is recommend configuration is put directly
+into a single file such as `clouddriver-local.yml` per the above section
+[custom-configuration].
+
+If this is insufficient then consider adapting the MariaDB component pattern
+and sharing a ConfigMap via [configMapGenerator](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/configmapgenerator/)
+`create` and `delete` options.
 
 #### Differences to Halyard
 

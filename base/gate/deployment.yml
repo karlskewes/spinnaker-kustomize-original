@@ -22,9 +22,7 @@ spec:
           httpGet:
             path: /health
             port: http
-            # TODO(ezimanyi): we need some way of making this scheme configurable
-            # so the health check passes without SSL enabled.
-            scheme: HTTPS
+            # scheme: HTTPS
         resources:
           requests:
             cpu: 100m
@@ -48,7 +46,8 @@ spec:
           - configMap:
               name: spinnaker
               items:
-              - key: spinnaker-local.yml
-                path: spinnaker-local.yml
+              - key: spinnaker.yml
+                path: spinnaker.yml
           - configMap:
               name: gate
+              items: []

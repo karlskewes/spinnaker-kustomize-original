@@ -5,6 +5,7 @@ resources:
 components:
 - components/mariadb
 - components/redis
+- overlays/config
 namespace: spinnaker
 images:
 - name: us-docker.pkg.dev/spinnaker-community/docker/clouddriver

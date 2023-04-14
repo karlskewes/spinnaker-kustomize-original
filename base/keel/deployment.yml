@@ -45,7 +45,8 @@ spec:
           - configMap:
               name: spinnaker
               items:
-              - key: spinnaker-local.yml
-                path: spinnaker-local.yml
+              - key: spinnaker.yml
+                path: spinnaker.yml
           - configMap:
               name: keel
+              items: []

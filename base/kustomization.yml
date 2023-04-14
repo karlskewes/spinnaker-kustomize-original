@@ -15,5 +15,5 @@ resources:
 - ./rosco
 configMapGenerator:
 - files:
-  - spinnaker-local.yml
+  - spinnaker.yml
   name: spinnaker

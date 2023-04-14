@@ -1,5 +1,7 @@
 # TODO
 
+1. migrate mariadb and redis to be like clouddriver. own config map per
+   component.
 1. no crash on startup
 1. <service>-local.yml support overlay.
 1. deck, echo, gate, keel external url's overlay. deck DECK_HOST & API_HOST
